@@ -48,7 +48,9 @@ def _clean_code(code: str) -> str:
         
         # Check if this line might be a continuation of the previous line
         # Look for operators at the beginning of the line (indicating a broken expression)
-        if stripped_line.startswith(('+ ', '- ', '* ', '/ ', '// ', '% ', '** ', '& ', '| ', '^ ', '<< ', '>> ', 'and ', 'or ')):
+        # But only if it's not part of a string or f-string
+        if (stripped_line.startswith(('+ ', '- ', '* ', '/ ', '// ', '% ', '** ', '& ', '| ', '^ ', '<< ', '>> ', 'and ', 'or ')) and
+            not _is_in_string_context(line)):
             # This line is likely a continuation of the previous line
             # We need to merge it with the previous line
             if cleaned_lines:
@@ -59,8 +61,9 @@ def _clean_code(code: str) -> str:
             else:
                 # If there's no previous line, just add the current line
                 cleaned_lines.append(line)
-        elif (stripped_line.endswith(('+', '-', '*', '/', '//', '%', '**', '&', '|', '^', '<<', '>>', 'and', 'or')) or
-              stripped_line.endswith(('+\\', '-\\', '*\\', '/\\', '//\\', '%\\', '**\\', '&\\', '|\\', '^\\', '<<\\', '>>\\'))):
+        elif ((stripped_line.endswith(('+', '-', '*', '/', '//', '%', '**', '&', '|', '^', '<<', '>>', 'and', 'or')) or
+              stripped_line.endswith(('+\\', '-\\', '*\\', '/\\', '//\\', '%\\', '**\\', '&\\', '|\\', '^\\', '<<\\', '>>\\'))) and
+              not _is_in_string_context(line)):
             # This line ends with an operator, likely to be continued in next line
             # We'll handle this together with the next line
             current_line = line.rstrip()
@@ -68,7 +71,8 @@ def _clean_code(code: str) -> str:
             # Keep collecting continuation lines
             while i < len(lines):
                 next_line = lines[i].strip()
-                if next_line.startswith(('+ ', '- ', '* ', '/ ', '// ', '% ', '** ', '& ', '| ', '^ ', '<< ', '>> ', 'and ', 'or ')):
+                if (next_line.startswith(('+ ', '- ', '* ', '/ ', '// ', '% ', '** ', '& ', '| ', '^ ', '<< ', '>> ', 'and ', 'or ')) and
+                    not _is_in_string_context(next_line)):
                     # This is a continuation, merge it
                     current_line += ' ' + next_line.lstrip()
                     i += 1
@@ -83,6 +87,57 @@ def _clean_code(code: str) -> str:
         i += 1
     
     return '\n'.join(cleaned_lines)
+
+
+def _is_in_string_context(line: str) -> bool:
+    """
+    Check if the given line contains string literals that might be continued.
+    """
+    # Count quotes to determine if we're in a string context
+    # This is a simplified check for single and double quotes
+    in_single_quote = False
+    in_double_quote = False
+    in_triple_single_quote = False
+    in_triple_double_quote = False
+    escape_next = False
+    
+    i = 0
+    while i < len(line):
+        char = line[i]
+        
+        if escape_next:
+            escape_next = False
+        elif char == '\\':
+            escape_next = True
+        elif char == '"' and not in_single_quote and not in_triple_single_quote:
+            if i + 2 < len(line) and line[i:i+3] == '"""':
+                if not in_triple_double_quote:
+                    in_triple_double_quote = True
+                    i += 2  # Skip the next two quotes
+                else:
+                    in_triple_double_quote = False
+                    i += 2  # Skip the next two quotes
+            elif not in_triple_double_quote:
+                if not in_double_quote:
+                    in_double_quote = True
+                else:
+                    in_double_quote = False
+        elif char == "'" and not in_double_quote and not in_triple_double_quote:
+            if i + 2 < len(line) and line[i:i+3] == "'''":
+                if not in_triple_single_quote:
+                    in_triple_single_quote = True
+                    i += 2  # Skip the next two quotes
+                else:
+                    in_triple_single_quote = False
+                    i += 2  # Skip the next two quotes
+            elif not in_triple_single_quote:
+                if not in_single_quote:
+                    in_single_quote = True
+                else:
+                    in_single_quote = False
+        i += 1
+    
+    return in_single_quote or in_double_quote or in_triple_single_quote or in_triple_double_quote
 
 
 @tool
