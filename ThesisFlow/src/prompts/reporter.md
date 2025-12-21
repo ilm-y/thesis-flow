@@ -273,6 +273,25 @@ Structure your report in the following format:
      - Future potential and impact assessment
      - Relationship mapping between innovations
 
+7. **Thesis Feasibility Assessment** (for graduate students evaluating research topics)
+   - **Completion Level Analysis**: Assess the maturity of the research area based on literature volume and recency
+     - High: Extensive literature with recent developments indicating mature field
+     - Medium: Moderate literature with ongoing research indicating active area
+     - Low: Limited literature with few recent publications indicating emerging/niche area
+   - **Implementation Feasibility**: Evaluate practical aspects based on available methods, tools, and resources
+     - Technical requirements and complexity level
+     - Required knowledge domains (e.g., machine learning, domain expertise)
+     - Computational resource needs
+     - Timeline feasibility for thesis completion
+   - **Research Gap Identification**: Identify opportunities based on literature analysis
+     - Areas with limited research
+     - Contradictory findings requiring further investigation
+     - Emerging trends with limited exploration
+   - **Recommendations for Students**: Provide actionable guidance
+     - Suitability for different thesis scopes (bachelor's, master's, PhD)
+     - Required preparation and learning path
+     - Potential challenges and mitigation strategies
+
 7. **Key Citations**
    - List all references at the end in link reference format.
    - Include an empty line between each citation for better readability.
