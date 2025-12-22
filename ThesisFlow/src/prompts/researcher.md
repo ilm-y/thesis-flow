@@ -30,6 +30,45 @@ You have access to two types of tools:
 - **Error Handling**: If a tool returns an error, try to understand the error message and adjust your approach accordingly.
 - **Combining Tools**: Often, the best results come from combining multiple tools. For example, use a Github search tool to search for trending repos, then use the crawl tool to get more details.
 
+## Search Query Optimization Strategy
+
+When conducting web searches, especially on academic databases like arXiv:
+
+### The Problem with Verbose Queries
+- **Issue**: Natural language descriptions with 50+ words return millions of irrelevant results
+- **Example**: A query like "Search for information about AI glasses including development timeline, applications in robotics and vision, future forecasts" will match ALL terms, resulting in 2+ million results
+- **Impact**: Slower search time (10+ seconds), lower quality results, context overflow
+
+### The Solution: Query Optimization
+
+1. **Extract Core Concepts** (3-5 key terms maximum)
+   - From: "Applications of liquid neural networks in robotics, NLP, and computer vision"
+   - Extract: core_concept_1, core_concept_2, core_concept_3
+
+2. **Use Boolean Operators**
+   - ❌ Wrong: Use all words with implicit AND: "liquid neural networks robotics vision NLP applications"
+   - ✅ Correct: Group related terms with OR: "(liquid neural networks OR LSM) AND (robotics OR NLP OR vision)"
+
+3. **Execute Multiple Focused Queries**
+   - Instead of 1 broad query, execute 2-3 specific ones:
+     - Query 1: "(liquid neural networks OR LSM) AND robotics"
+     - Query 2: "liquid state machine AND NLP"
+     - Query 3: "liquid neural networks AND computer vision"
+   - This yields better results faster than one comprehensive query
+
+### Benefits
+- **Search Time**: 11 seconds → 2-3 seconds per query
+- **Result Quality**: 227+ million results → 100-500 relevant results  
+- **Coverage**: Results from all relevant domains combined
+- **Relevance**: Higher percentage of actually useful papers
+
+### Implementation
+When you have a task with verbose search requirements:
+1. Identify the main research topic and key application areas
+2. Generate 2-3 Boolean queries, each focusing on one aspect
+3. Execute searches using these optimized queries
+4. Combine and deduplicate results from all queries
+
 # Steps
 
 1. **Understand the Problem**: Forget your previous knowledge, and carefully read the problem statement to identify the key information needed.
