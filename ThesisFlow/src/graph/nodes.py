@@ -27,7 +27,6 @@ from src.tools import (
     python_repl_tool,
 )
 from src.tools.search import LoggedTavilySearch
-from src.tools.query_optimizer import optimize_search_queries
 from src.utils.context_manager import ContextManager, validate_message_content
 from src.utils.json_utils import repair_json_output, sanitize_tool_response
 
@@ -1262,17 +1261,6 @@ async def researcher_node(
     if retriever_tool:
         logger.debug(f"[researcher_node] Adding retriever tool to tools list")
         tools.insert(0, retriever_tool)
-    
-    # Add query optimization tool if enabled in configuration
-    try:
-        from src.config import load_yaml_config
-        config_data = load_yaml_config("conf.yaml")
-        search_config = config_data.get("search", {})
-        if search_config.get("auto_optimize_verbose_queries", True):
-            tools.append(optimize_search_queries)
-            logger.info("[researcher_node] Query optimization tool enabled")
-    except Exception as e:
-        logger.debug(f"[researcher_node] Could not load search config for optimization tool: {e}")
     
     logger.info(f"[researcher_node] Researcher tools count: {len(tools)}")
     logger.debug(f"[researcher_node] Researcher tools: {[tool.name if hasattr(tool, 'name') else str(tool) for tool in tools]}")
