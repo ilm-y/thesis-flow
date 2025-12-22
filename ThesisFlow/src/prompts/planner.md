@@ -75,6 +75,25 @@ Different types of steps have different web search requirements:
    - Statistical computations and data processing
    - **NOTE**: Processing steps alone are insufficient - you must include research steps with web search
 
+## Search Description Best Practices
+
+When writing the `description` field for research steps with `need_search: true`:
+
+**⚠️ IMPORTANT**: Keep descriptions focused and specific, not overly verbose:
+
+- ❌ **Avoid**: "Search academic databases (arXiv, IEEE Xplore, ACM Digital Library) and industry news websites for information related to AI glasses. Gather historical data such as the timeline of AI glasses development, early pioneers, and foundational work. Also collect current data including latest technological advances, market situation, and recent product launches." (68 words)
+  - Result: 2+ million irrelevant results, 10+ seconds search time, poor quality
+
+- ✅ **Better**: "Find historical information about AI glasses development, key researchers, and current market applications from academic papers and industry reports."
+  - Result: The researcher agent will automatically optimize this into 2-3 focused Boolean queries
+  - Execution time: 2-3 seconds, high-quality results
+
+**Guidelines**:
+- Identify the main topic and 2-3 key aspects to explore
+- List them clearly but concisely (under 30 words ideally)
+- The researcher agent will automatically optimize verbose descriptions into multiple focused searches
+- Focus on WHAT data is needed, not HOW to search for it
+
 ## Web Search Requirement
 
 **MANDATORY**: Every research plan MUST include at least one step with `need_search: true`. This is critical because:
